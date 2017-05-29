@@ -8,6 +8,7 @@
 
 import UIKit
 
+@available(iOS 9.0, *)
 class AnimationController: NSObject {
     
     let imagePickerSheetController: ImagePickerSheetController
@@ -53,6 +54,7 @@ class AnimationController: NSObject {
 }
 
 // MARK: - UIViewControllerAnimatedTransitioning
+@available(iOS 9.0, *)
 extension AnimationController: UIViewControllerAnimatedTransitioning {
     
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {

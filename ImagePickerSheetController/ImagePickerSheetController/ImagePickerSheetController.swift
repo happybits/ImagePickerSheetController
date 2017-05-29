@@ -18,6 +18,7 @@ public enum ImagePickerMediaType {
     case imageAndVideo
 }
 
+@available(iOS 9.0, *)
 @objc public protocol ImagePickerSheetControllerDelegate {
     
     @objc optional func controllerWillEnlargePreview(_ controller: ImagePickerSheetController)
@@ -382,6 +383,7 @@ open class ImagePickerSheetController: UIViewController {
 
 // MARK: - UICollectionViewDataSource
 
+@available(iOS 9.0, *)
 extension ImagePickerSheetController: UICollectionViewDataSource {
     
     public func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -423,6 +425,7 @@ extension ImagePickerSheetController: UICollectionViewDataSource {
 
 // MARK: - UICollectionViewDelegate
 
+@available(iOS 9.0, *)
 extension ImagePickerSheetController: UICollectionViewDelegate {
     
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -488,6 +491,7 @@ extension ImagePickerSheetController: UICollectionViewDelegate {
 
 // MARK: - UICollectionViewDelegateFlowLayout
 
+@available(iOS 9.0, *)
 extension ImagePickerSheetController: UICollectionViewDelegateFlowLayout {
     
     public func collectionView(_ collectionView: UICollectionView, layout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -510,6 +514,7 @@ extension ImagePickerSheetController: UICollectionViewDelegateFlowLayout {
 
 // MARK: - UIViewControllerTransitioningDelegate
 
+@available(iOS 9.0, *)
 extension ImagePickerSheetController: UIViewControllerTransitioningDelegate {
     
     public func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
