@@ -134,7 +134,7 @@ open class ImagePickerSheetController: UIViewController {
         super.init(nibName: nil, bundle: nil)
         initialize()
     }
-
+    
     public required init?(coder aDecoder: NSCoder) {
         self.mediaType = .imageAndVideo
         super.init(coder: aDecoder)
@@ -209,7 +209,7 @@ open class ImagePickerSheetController: UIViewController {
     
     fileprivate func sizeForAsset(_ asset: PHAsset, scale: CGFloat = 1) -> CGSize {
         let proportion = CGFloat(asset.pixelWidth)/CGFloat(asset.pixelHeight)
-    
+        
         let imageHeight = maximumPreviewHeight - 2 * previewInset
         let imageWidth = floor(proportion * imageHeight)
         
@@ -258,17 +258,14 @@ open class ImagePickerSheetController: UIViewController {
                 }
             }
             
-            self.imageManager.requestImageData(for: asset, options: requestOptions) { data, _, _, info in
-                if data != nil {
-                    self.assets.append(asset)
-                }
-            }
+            self.assets.append(asset)
+            
         })
     }
     
     fileprivate func requestImageForAsset(_ asset: PHAsset, completion: @escaping (_ image: UIImage?) -> ()) {
         let targetSize = sizeForAsset(asset, scale: UIScreen.main.scale)
-        requestOptions.isSynchronous = true
+        requestOptions.isSynchronous = false
         
         // Workaround because PHImageManager.requestImageForAsset doesn't work for burst images
         if asset.representsBurst {
@@ -335,16 +332,16 @@ open class ImagePickerSheetController: UIViewController {
     fileprivate func reloadMaximumPreviewHeight() {
         let maxHeight: CGFloat = 400
         let maxImageWidth = view.bounds.width - 2 * sheetInset - 2 * previewInset
-
+        
         let assetRatios = assets.map { (asset: PHAsset) -> CGSize in
-                CGSize(width: max(asset.pixelHeight, asset.pixelWidth), height: min(asset.pixelHeight, asset.pixelWidth))
+            CGSize(width: max(asset.pixelHeight, asset.pixelWidth), height: min(asset.pixelHeight, asset.pixelWidth))
             }.map { (size: CGSize) -> CGFloat in
                 size.height / size.width
-            }
-
+        }
+        
         let assetHeights = assetRatios.map { (ratio: CGFloat) -> CGFloat in ratio * maxImageWidth }
-                                      .filter { (height: CGFloat) -> Bool in height < maxImageWidth && height < maxHeight } // Make sure the preview isn't too high eg for squares
-                                      .sorted(by: >)
+            .filter { (height: CGFloat) -> Bool in height < maxImageWidth && height < maxHeight } // Make sure the preview isn't too high eg for squares
+            .sorted(by: >)
         let assetHeight: CGFloat
         if let first = assetHeights.first {
             assetHeight = first
@@ -352,7 +349,7 @@ open class ImagePickerSheetController: UIViewController {
         else {
             assetHeight = 0
         }
-
+        
         // Just a sanity check, to make sure this doesn't exceed 400 points
         let scaledHeight: CGFloat = min(assetHeight, maxHeight)
         maximumPreviewHeight = scaledHeight + 2 * previewInset
@@ -399,7 +396,7 @@ extension ImagePickerSheetController: UICollectionViewDataSource {
         
         let asset = assets[indexPath.section]
         cell.videoIndicatorView.isHidden = asset.mediaType != .video
-
+        
         requestImageForAsset(asset) { image in
             cell.imageView.image = image
         }
@@ -432,13 +429,13 @@ extension ImagePickerSheetController: UICollectionViewDelegate {
         if let maximumSelection = maximumSelection {
             if selectedAssetIndices.count >= maximumSelection,
                 let previousItemIndex = selectedAssetIndices.first {
-                    let deselectedAsset = selectedAssets[previousItemIndex]
-                    delegate?.controller?(self, willDeselectAsset: deselectedAsset)
+                let deselectedAsset = selectedAssets[previousItemIndex]
+                delegate?.controller?(self, willDeselectAsset: deselectedAsset)
                 
-                    supplementaryViews[previousItemIndex]?.selected = false
-                    selectedAssetIndices.remove(at: 0)
+                supplementaryViews[previousItemIndex]?.selected = false
+                selectedAssetIndices.remove(at: 0)
                 
-                    delegate?.controller?(self, didDeselectAsset: deselectedAsset)
+                delegate?.controller?(self, didDeselectAsset: deselectedAsset)
             }
         }
         
@@ -504,7 +501,7 @@ extension ImagePickerSheetController: UICollectionViewDelegateFlowLayout {
         
         return CGSize(width: size.width * scale, height: currentImagePreviewHeight)
     }
-
+    
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         let checkmarkWidth = PreviewSupplementaryView.checkmarkImage?.size.width ?? 0
         return CGSize(width: checkmarkWidth + 2 * previewCheckmarkInset, height: sheetController.previewHeight - 2 * previewInset)
