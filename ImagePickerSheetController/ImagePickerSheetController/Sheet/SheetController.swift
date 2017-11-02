@@ -156,7 +156,8 @@ class SheetController: NSObject {
         actionHandlingCallback?()
         action.handle(numberOfSelectedAssets)
     }
-    
+
+    @objc
     func handleCancelAction() {
         let cancelAction = actions.filter { $0.style == .cancel }
                                   .first
